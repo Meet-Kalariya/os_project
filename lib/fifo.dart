@@ -2,10 +2,11 @@ import 'dart:collection';
 
 int hit = 0;
 int fault = 0;
+var toprint = <List>[];
 List intpageFaults(List<int> pages, int n, int capcity) {
 //   int hit = 0;
 //   int fault = 0;
-  var toprint = <List>[];
+
   var frameSize = capcity;
   var position = -1;
   List<int> frame = new List(capcity);
@@ -32,4 +33,10 @@ List intpageFaults(List<int> pages, int n, int capcity) {
     }
   }
   return toprint;
+}
+void main()
+{
+  List<int> pgs = [1,4,2,6,8,7,3,2];
+  intpageFaults(pgs, pgs.length, 3);
+  print(toprint);
 }
