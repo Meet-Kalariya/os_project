@@ -27,7 +27,6 @@ int lru(List<int> pages, int n, int capacity) {
           }
 
         }
-
         print("F - $frame");
         print("ST - $st");
         //  print(toprint);
