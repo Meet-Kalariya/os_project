@@ -2,45 +2,34 @@ import 'dart:collection';
 
 int hit = 0;
 int fault = 0;
-List<int> toprint = new List();
-int intpageFaults(List<int> pages, int n, int capcity){
+List intpageFaults(List<int> pages, int n, int capcity) {
 //   int hit = 0;
 //   int fault = 0;
-  int frameSize = capcity;
-  int position = -1;
-  List<int> frame =  new List(frameSize);
-  int i = 0;
-
-  for(i=0;i<n;i++)
-  {
-    if(!(frame.contains(pages[i])))
-    {
+  var toprint = <List>[];
+  var frameSize = capcity;
+  var position = -1;
+  List<int> frame = new List(capcity);
+  var i = 0;
+  for (i = 0; i < n; i++) {
+    List<int> s1 = new List();
+    if (!(frame.contains(pages[i]))) {
       position++;
-      if(position>(frameSize-1))
-        position=0;
+      if (position > (frameSize - 1)) {
+        position = 0;
+      }
       frame[position] = pages[i];
-      //print(frame);
-      toprint.addAll(frame);
+      print("f1");
+      print(frame);
+      s1.addAll(frame);
+      toprint.add(s1);
       fault++;
-
-    }
-    else if(frame.contains(pages[i]))
-    {
-      //print(frame);
-      toprint.addAll(frame);
+    } else if (frame.contains(pages[i])) {
+      print("f2");
+      s1.addAll(frame);
+      print(frame);
+      toprint.add(s1);
       hit++;
     }
   }
-  return fault;
-}
-
-void main() {
-  List<int> pages = [7, 0, 1, 2, 0, 3, 0, 4,
-    2, 3, 0, 3, 2];
-
-
-  int capacity = 4;
-  print(intpageFaults(pages, pages.length, capacity));
-  print(hit);
-  print(toprint);
+  return toprint;
 }
