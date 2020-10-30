@@ -154,77 +154,82 @@ class _FIFOState extends State<FIFO> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget> [
-            Padding(
-                padding: EdgeInsets.fromLTRB(8, 8, 8, 10),
-                child : Text('Click on arrows to see sets', style: GoogleFonts.montserrat(fontSize: 25.0,color: Colors.orange))
-            ),
-            Padding(
+      appBar: AppBar(
+        title: Text("OUTPUT"),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget> [
+              Padding(
+                  padding: EdgeInsets.fromLTRB(8, 8, 8, 10),
+                  child : Text('Click on arrows to see sets', style: GoogleFonts.montserrat(fontSize: 25.0,color: Colors.orange))
+              ),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(8, 8, 8, 40),
+                  child : Text('Set: $pclick / $length', style: GoogleFonts.montserrat(fontSize: 25.0,color: Colors.orange))
+              ),
+              Padding(
                 padding: EdgeInsets.fromLTRB(8, 8, 8, 40),
-                child : Text('Set: $pclick / $length', style: GoogleFonts.montserrat(fontSize: 25.0,color: Colors.orange))
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(8, 8, 8, 40),
-              child : createTable(),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget> [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(8, 20, 2, 8),
-                  child : Text('Page Hit : ', style: GoogleFonts.montserrat(fontSize: 23.0,color: Colors.green)),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(2, 20, 60, 8),
-                  child : Text(hit1_arr.elementAt(click).toString(), style: GoogleFonts.montserrat(fontSize: 23.0,color: Colors.green)),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10, 20, 2, 8),
-                  child : Text('Page Fault : ', style: GoogleFonts.montserrat(fontSize: 23.0,color: Colors.red)),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(2, 20, 8, 8),
-                  child : Text(fault1_arr.elementAt(click).toString(), style: GoogleFonts.montserrat(fontSize: 23.0,color: Colors.red)),
-                ),
-              ],
-            ),
-            Row (
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget> [
-                IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    setState(() {
-                      if(click > 0) {
-                        click--;
-                        pclick--;
-                      }
-                    });
-                  },
-                ),
-                Padding(
-                  padding: EdgeInsets.all(40),
-                ),
-                IconButton(
-                  icon: Icon(Icons.arrow_forward),
-                  onPressed: () {
-                    setState(() {
-                      if(toprint1.length > click+1) {
-                        click++;
-                        pclick++;
-                      }
-                      else {
-                        showAlertDialog(context);
-                      }
-                    });
-                  },
-                ),
-              ],
-            )
-          ],
+                child : createTable(),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget> [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(8, 20, 2, 8),
+                    child : Text('Page Hit : ', style: GoogleFonts.montserrat(fontSize: 23.0,color: Colors.green)),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(2, 20, 60, 8),
+                    child : Text(hit1_arr.elementAt(click).toString(), style: GoogleFonts.montserrat(fontSize: 23.0,color: Colors.green)),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10, 20, 2, 8),
+                    child : Text('Page Fault : ', style: GoogleFonts.montserrat(fontSize: 23.0,color: Colors.red)),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(2, 20, 8, 8),
+                    child : Text(fault1_arr.elementAt(click).toString(), style: GoogleFonts.montserrat(fontSize: 23.0,color: Colors.red)),
+                  ),
+                ],
+              ),
+              Row (
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget> [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      setState(() {
+                        if(click > 0) {
+                          click--;
+                          pclick--;
+                        }
+                      });
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(40),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_forward),
+                    onPressed: () {
+                      setState(() {
+                        if(toprint1.length > click+1) {
+                          click++;
+                          pclick++;
+                        }
+                        else {
+                          showAlertDialog(context);
+                        }
+                      });
+                    },
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
