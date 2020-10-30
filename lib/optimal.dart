@@ -1,7 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:os_project/homepage.dart';
+import 'package:os_project/inputpages.dart';
 
-List<List> toprint = new List();
-int hit = 0;
-int miss = 0;
+List<List> toprint4 = new List();
+int hit4 = 0;
+int fault4 = 0;
+List <int> fault4_arr = new List();
+List <int> hit4_arr = new List();
 
 bool search(int key, List<int> fr) {
   for (int i = 0; i < fr.length; i++) {
@@ -10,12 +16,12 @@ bool search(int key, List<int> fr) {
   return false;
 }
 
-int predict(List<int> pg, List<int> fr, int pn, int index) {
+int predict(List<int> pages, List<int> fr, int n, int index) {
   int res = -1, farthest = index;
   for (int i = 0; i < fr.length; i++) {
     int j;
-    for (j = index; j < pn; j++) {
-      if (fr.elementAt(i) == pg.elementAt(j)) {
+    for (j = index; j < n; j++) {
+      if (fr.elementAt(i) == pages.elementAt(j)) {
         if (j > farthest) {
           farthest = j;
           res = i;
@@ -23,37 +29,232 @@ int predict(List<int> pg, List<int> fr, int pn, int index) {
         break;
       }
     }
-    if (j == pn) return i;
+    if (j == n) return i;
   }
   return (res == -1) ? 0 : res;
 }
 
-void optimalpage(List<int> pg, int pn, int fn) {
-  List<int> fr = new List();
-  for (int i = 0; i < pn; i++) {
-    List<int> s1 = new List();
-    if (search(pg.elementAt(i), fr)) {
+void optimalalgo(List<int> pages, int n, int capacity) {
+  List <int> fr = new List();
+  for (int i = 0; i < n; i++) {
+    List <int> s1 = new List();
+    if (search(pages.elementAt(i), fr)) {
       s1.addAll(fr);
-      toprint.add(s1);
-      hit++;
+      for (int j = 0; j < capacity - fr.length; j++) {
+        s1.add(null);
+      }
+      toprint4.add(s1);
+      hit4++;
+      hit4_arr.add(hit4);
+      fault4_arr.add(fault4_arr.elementAt(fault4_arr.length-1));
       continue;
     }
-    if (fr.length < fn) {
-      fr.add(pg.elementAt(i));
+    if (fr.length < capacity) {
+      fr.add(pages.elementAt(i));
       s1.addAll(fr);
-      toprint.add(s1);
+      for (int j = 0; j < capacity - fr.length; j++) {
+        s1.add(null);
+      }
+      fault4++;
+      fault4_arr.add(fault4);
+      if(i==0) {
+        hit4_arr.add(0);
+      }
+      else {
+        hit4_arr.add(hit4_arr.elementAt(hit4_arr.length-1));
+      }
+      toprint4.add(s1);
     } else {
-      int j = predict(pg, fr, pn, i + 1);
+      int j = predict(pages, fr, n, i + 1);
       fr.removeAt(j);
-      fr.insert(j, pg.elementAt(i));
+      fr.insert(j, pages.elementAt(i));
       s1.addAll(fr);
-      toprint.add(s1);
+      for (int j = 0; j < capacity - fr.length; j++) {
+        s1.add(null);
+      }
+      toprint4.add(s1);
+      fault4++;
+      fault4_arr.add(fault4);
+      if(i==0) {
+        hit4_arr.add(0);
+      }
+      else {
+        hit4_arr.add(hit4_arr.elementAt(hit4_arr.length-1));
+      }
     }
   }
-  miss = pn - hit;
+  fault4 = n - hit4;
 }
-void main(){
-  List<int> pgs = [1,4,2,6,8,7,3,2];
-  optimalpage(pgs, pgs.length, 3);
-  print(toprint);
+
+
+class OPTIMAL extends StatefulWidget {
+  @override
+  _OPTIMALState createState() => _OPTIMALState();
+}
+
+class _OPTIMALState extends State<OPTIMAL> {
+
+  int click = 0;
+  int pclick = 1;
+  final int length = toprint4.length;
+
+  Widget createTable() {
+    List<TableRow> rows = [];
+    rows.add(
+        TableRow(
+            children: <Widget> [
+              Text("Pages",style: GoogleFonts.montserrat(fontSize: 25.0,color: Colors.orange), textAlign: TextAlign.center,),
+            ]
+        )
+    );
+    for (int i = 0; i < frame_capacity; i++) {
+      if(click == 0)
+        rows.add(
+            TableRow(
+                children: <Widget> [
+                  Text(toprint4.elementAt(click).elementAt(i).toString(), style: GoogleFonts.montserrat(fontSize: 25.0,color: Colors.red), textAlign: TextAlign.center,),
+                ]
+            )
+        );
+      else if(toprint4.elementAt(click-1).contains(toprint4.elementAt(click).elementAt(i)))
+        rows.add(
+            TableRow(
+                children: <Widget> [
+                  Text(toprint4.elementAt(click).elementAt(i).toString(), style: GoogleFonts.montserrat(fontSize: 25.0,color: Colors.green), textAlign: TextAlign.center,),
+                ]
+            )
+        );
+      else{
+        rows.add(
+            TableRow(
+                children: <Widget> [
+                  Text(toprint4.elementAt(click).elementAt(i).toString(), style: GoogleFonts.montserrat(fontSize: 25.0,color: Colors.red), textAlign: TextAlign.center,),
+                ]
+            )
+        );
+      }
+    }
+    return Table(children: rows);
+  }
+
+
+  showAlertDialog(BuildContext context) {
+    Widget cancelButton = FlatButton(
+      child: Text("EXIT"),
+      onPressed:  () {
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> HomePage()),);
+        frame_capacity = 0;
+        pagesEntryTextBox.text = '';
+        pageCapacityTextBox.text = '';
+        pages_arr.clear();
+        toprint4.clear();
+        hit4 = 0;
+        fault4 = 0;
+        fault4_arr.clear();
+        hit4_arr.clear();
+      },
+    );
+
+    Widget continueButton = FlatButton(
+      child: Text("STAY"),
+      onPressed:  () {
+        return _OPTIMALState();
+      },
+    );
+
+    AlertDialog alert = new AlertDialog(
+      title: Text("PROCESS COMPLETED"),
+      content: Text("YOU HAVE REACHED END OF THE ALGORITHM WHAT WOULD YOU LIKE TO DO?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget> [
+            Padding(
+                padding: EdgeInsets.fromLTRB(8, 8, 8, 10),
+                child : Text('Click on arrows to see sets', style: GoogleFonts.montserrat(fontSize: 25.0,color: Colors.orange))
+            ),
+            Padding(
+                padding: EdgeInsets.fromLTRB(8, 8, 8, 40),
+                child : Text('Set: $pclick / $length', style: GoogleFonts.montserrat(fontSize: 25.0,color: Colors.orange))
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(8, 8, 8, 40),
+              child : createTable(),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget> [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(8, 20, 2, 8),
+                  child : Text('Page Hit : ', style: GoogleFonts.montserrat(fontSize: 23.0,color: Colors.green)),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(2, 20, 60, 8),
+                  child : Text(hit4_arr.elementAt(click).toString(), style: GoogleFonts.montserrat(fontSize: 25.0,color: Colors.green)),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(10, 20, 2, 8),
+                  child : Text('Page Fault : ', style: GoogleFonts.montserrat(fontSize: 23.0,color: Colors.red)),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(2, 20, 8, 8),
+                  child : Text(fault4_arr.elementAt(click).toString(), style: GoogleFonts.montserrat(fontSize: 25.0,color: Colors.red)),
+                ),
+              ],
+            ),
+            Row (
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget> [
+                IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    setState(() {
+                      if(click > 0) {
+                        click--;
+                        pclick--;
+                      }
+                    });
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.all(40),
+                ),
+                IconButton(
+                  icon: Icon(Icons.arrow_forward),
+                  onPressed: () {
+                    setState(() {
+                      if(toprint4.length > click+1) {
+                        click++;
+                        pclick++;
+                      }
+                      else {
+                        showAlertDialog(context);
+                      }
+                    });
+                  },
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }
